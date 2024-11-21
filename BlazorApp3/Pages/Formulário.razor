@@ -1,0 +1,106 @@
+﻿@page "/formulario"
+@using BlazorApp3.Models
+@using BlazorApp3.Repositorio
+@using BlazorApp3.Data
+@inject IPermissaoRepositorio ipermissaorepositorio
+
+<h1>Editar</h1>
+
+<hr />
+@code {
+    public int tipoEmailID, formaEnvioRM, enviarParaID;
+
+    [Parameter]
+    public int? Id { get; set; }
+    PermissaoCliente pcliente = new PermissaoCliente();
+    PermissaoDbContext pdbcontext { get; set; }
+    List<PermissaoCliente> todosClientes = new List<PermissaoCliente>();
+
+    private int formaEnvio, tipoEnvio, enviarPara;
+     
+    async Task Save()
+    {
+        //
+    }
+
+   
+}
+
+@{
+    List<PermissaoTipo> listagemTipos = ipermissaorepositorio.ListarPermissaoTipo();
+    List<PermissaoEnviarPara> listagemEnviarPara = ipermissaorepositorio.ListarPermissaoEnviarPara();
+    List<PermissaoFormaEnvio> listagem = ipermissaorepositorio.ListarFormaPermissao();
+    todosClientes = ipermissaorepositorio.ListarClientes();
+    pcliente = todosClientes[0];
+
+    formaEnvio = pcliente.FormaEnvioRmID.FormaEnvioRmID;
+    tipoEnvio = pcliente.TipoEmailID.TipoEmailID;
+    enviarPara = pcliente.EnviarParaID.EnviarParaID;
+}
+
+<h4> Consultando Usuário de Id = @pcliente.ClientID </h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-controller="Permissao" asp-action="UpdateClient" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <h5>Permitido</h5>
+            <div class=" text-dark">
+                @{
+                    if(pcliente.Permitido)
+                    {
+                        <input type="checkbox" checked>
+                    }
+                    else
+                    {
+                        <input type="checkbox">
+                    }
+                }
+                
+            </div>
+            <br />
+            
+            <EditForm Model="pcliente" OnSubmit="Save" FormName="editClient">
+                <h5>Tipo Email </h5>
+                <div class="form-group text-dark">                 
+                    <h1></h1>
+                    @* TIPO EMAIL *@
+                    <select @bind="tipoEnvio" class="form-control">
+                        <option value="0">--Escolha uma Tipo de Envio-- </option>
+                        <option value="1002">Comunicação de Rebalanceamento da Carteira</option>
+                        <option value="1003">Comunicação de Movimentos</option>
+                        <option value="1004">Mensagem de Feliz Aniversário</option>
+                    </select>
+                    <h1></h1>
+                    <br />
+                    @* ENVIAR PARA *@
+                    <h5>Enviar Para</h5>
+                    <div class="form-group text-dark">
+                        <h1></h1>
+                        <select @bind="enviarPara" class="form-control">
+                            <option value="0">--Escolha para quem Enviar--</option>
+                            <option value="1002">Cliente</option>
+                            <option value="1003">Consultor</option>
+                            <option value="1004">Ambos</option>
+                        </select>
+                    </div>
+                    <br />
+                    @* FORMA ENVIO RM *@
+                    <h5>Forma Envio RM</h5>
+                    <div class="form-group text-dark">
+                        <h1></h1>
+                        <select @bind="formaEnvio" class="form-control">
+                            <option value="0">--Escolha uma Forma de Envio--</option>
+                            <option value="1002">Destinatário</option>
+                            <option value="1003">Cópia</option>
+                            <option value="1004">Cópia Oculta</option>
+                        </select>
+                    </div>
+                    <br />
+                    <input type="submit" value="Salvar" class="btn btn-primary" />               
+            </div>
+            </EditForm>
+        </form>
+    </div>
+</div>
