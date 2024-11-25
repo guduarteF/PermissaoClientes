@@ -2,26 +2,59 @@
 using BlazorApp3.Models;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace BlazorApp3.Repositorio
 {
     public class PermissaoRepositorio : IPermissaoRepositorio
     {
         public PermissaoDbContext _context;
+        
 
         public PermissaoRepositorio(PermissaoDbContext context)
         {
             _context = context;
+            
         }
 
-        public PermissaoCliente AdicionarCliente(bool permitido, int tipoEmailID, int enviarParaId, int formaEnvioRmId)
+        public void AdicionarCliente(bool permitido, int tipoEmailID, int enviarParaId, int formaEnvioRmId)
         {
+
             PermissaoCliente novoCliente = new PermissaoCliente();
+            List<PermissaoTipo> listagemTipos = ListarPermissaoTipo();
+            List<PermissaoEnviarPara> listagemEnviarPara = ListarPermissaoEnviarPara();
+            List<PermissaoFormaEnvio> listagemForma = ListarFormaPermissao();
+
+            foreach (var x in listagemTipos)
+            {
+                if(x.TipoEmailID == tipoEmailID)
+                {
+                    novoCliente.TipoEmailID = x;
+                }
+               
+            }
+
+            foreach (var y in listagemEnviarPara)
+            {
+                if (y.EnviarParaID == enviarParaId)
+                {
+                    novoCliente.EnviarParaID = y;
+                }
+
+            }
+
+            foreach (var z in listagemForma)
+            {
+                if (z.FormaEnvioRmID == formaEnvioRmId)
+                {
+                    novoCliente.FormaEnvioRmID = z;
+                }
+
+            }
+
             novoCliente.Permitido = permitido;
-            novoCliente.TipoEmailID.TipoEmailID = tipoEmailID;
-            novoCliente.EnviarParaID.EnviarParaID = enviarParaId;
-            novoCliente.FormaEnvioRmID.FormaEnvioRmID = formaEnvioRmId;
+ 
             _context.permissaoClientes.Add(novoCliente);
-            return novoCliente;
+            _context.SaveChanges();
         }
 
         public List<PermissaoFormaEnvio> ListarFormaPermissao()

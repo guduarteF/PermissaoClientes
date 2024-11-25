@@ -1,10 +1,73 @@
 ﻿@page "/"
+@using BlazorApp3.Models
+@using BlazorApp3.Repositorio
+@using BlazorApp3.Data
+@inject IPermissaoRepositorio ipermissaorepositorio
+
+@code{
+    List<PermissaoCliente> todosClientes;
+    PermissaoCliente pcliente;
+
+}
+
+@{
+    List<PermissaoTipo> listagemTipos = ipermissaorepositorio.ListarPermissaoTipo();
+    List<PermissaoEnviarPara> listagemEnviarPara = ipermissaorepositorio.ListarPermissaoEnviarPara();
+    List<PermissaoFormaEnvio> listagemForma = ipermissaorepositorio.ListarFormaPermissao();
+
+    todosClientes = ipermissaorepositorio.ListarClientes();
+    pcliente = todosClientes[0];
+
+    string descricaoTipo(int tipo)
+    {
+        string descricao = "sem valor";
+
+        foreach (var t in listagemTipos)
+        {
+            if (t.TipoEmailID == tipo)
+            {
+                descricao =  t.Descrição;
+            }
+        }
+        return descricao;
+    }
+
+    string descricaoForma(int forma)
+    {
+        string descricao = "sem valor";
+
+        foreach (var t in listagemForma)
+        {
+            if (t.FormaEnvioRmID == forma)
+            {
+                descricao = t.Descricao;
+            }
+        }
+        return descricao;
+    }
+
+    string descricaoEnviarPara(int enviarPara)
+    {
+        string descricao = "sem valor";
+
+        foreach (var t in listagemEnviarPara)
+        {
+            if (t.EnviarParaID == enviarPara)
+            {
+                descricao = t.Descrição;
+            }
+        }
+        return descricao;
+    }
+
+}
+
 <h3> Tabela de Clientes </h3>
 <hr />
 <h5> [+] Adicionar Cliente </h5>
 <table class="table">
     <thead>
-        <tr>
+        <tr>       
             <th scope="col">Id</th>
             <th scope="col">Permitido</th>
             <th scope="col">TipoEmail</th>
@@ -12,16 +75,22 @@
             <th scope="col">FormaEnvio</th>
         </tr>
     </thead>
-    <tbody>
-        <tr>
-            @* Foreach c in clientes*@
-            <th scope="row">1</th>
-            <td>true</td>
-            <td>Comunicação de Movimentos</td>
-            <td>Consultor</td>
-            <td>Cópia Oculta</td>
-            <td>Editar</td>
-            <td>Remover</td>
-        </tr>
+    <tbody> 
+            @{
+                foreach (var cliente in todosClientes)
+                {
+                    <tr>
+                        <th scope="row"> @cliente.ClientID</th>
+                        <td>@cliente.Permitido</td>
+                        <td>@descricaoTipo(cliente.TipoEmailID.TipoEmailID)</td>
+                        <td>@descricaoEnviarPara(cliente.EnviarParaID.EnviarParaID)</td>
+                        <td>@descricaoForma(cliente.FormaEnvioRmID.FormaEnvioRmID)</td>
+                        <td>Editar</td>
+                        <td>Remover</td>                       
+                    </tr>
+                   
+                }
+            }
+
     </tbody>
 </table>

@@ -17,10 +17,11 @@
     List<PermissaoCliente> todosClientes = new List<PermissaoCliente>();
 
     private int formaEnvio, tipoEnvio, enviarPara;
-     
+    private bool permitido;
+
     async Task Save()
     {
-        //
+        ipermissaorepositorio.AdicionarCliente(permitido, tipoEnvio, enviarPara, formaEnvio);
     }
 
    
@@ -43,7 +44,7 @@
             <input type="hidden" asp-for="Id" />
             <h5>Permitido</h5>
             <div class=" text-dark">              
-                <input type="checkbox">                    
+                <input @bind="permitido" type="checkbox">                        
             </div>
             <br />
             

@@ -8,6 +8,6 @@ public interface IPermissaoRepositorio
     List<PermissaoTipo> ListarPermissaoTipo();
     List<PermissaoEnviarPara> ListarPermissaoEnviarPara();
     // PermissaoCliente Editar(PermissaoCliente cliente);
-    PermissaoCliente AdicionarCliente(bool permitido, int tipoEmailID, int enviarParaId, int formaEnvioRmId);
+    void AdicionarCliente(bool permitido, int tipoEmailID, int enviarParaId, int formaEnvioRmId);
 
 }
