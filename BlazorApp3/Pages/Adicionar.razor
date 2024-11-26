@@ -3,6 +3,7 @@
 @using BlazorApp3.Repositorio
 @using BlazorApp3.Data
 @inject IPermissaoRepositorio ipermissaorepositorio
+@inject NavigationManager navigationManager
 
 <h1>Adicionar</h1>
 
@@ -22,6 +23,7 @@
     async Task Save()
     {
         ipermissaorepositorio.AdicionarCliente(permitido, tipoEnvio, enviarPara, formaEnvio);
+        navigationManager.NavigateTo("");
     }
 
    
@@ -85,7 +87,11 @@
                         </select>
                     </div>
                     <br />
-                    <input type="submit" value="Salvar" class="btn btn-primary" />               
+
+                    
+                    <input type="submit" value="Salvar" class="btn btn-primary" />
+                    
+                                   
             </div>
             </EditForm>
         </form>

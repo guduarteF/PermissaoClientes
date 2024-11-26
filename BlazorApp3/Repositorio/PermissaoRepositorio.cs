@@ -72,25 +72,50 @@ namespace BlazorApp3.Repositorio
             return _context.permissaoTipos.ToList();
         }
 
-        //public PermissaoTipo ListarPermissaoTipo(int id)
-        //{
-        //    _context.permissaoTipos.
-        //}
 
-        //public PermissaoCliente Editar(PermissaoCliente cliente)
-        //{
-        //    PermissaoCliente clientdbz = ListarPorId(cliente.ClientID);
-        //    // nao esta puxando o cliente do banco de dados {null}
-        //    clienteDB.Permitido = cliente.Permitido;
-        //    clienteDB.EnviarParaID = cliente.EnviarParaID;
-        //    clienteDB.FormaEnvioRmID = cliente.FormaEnvioRmID;
-        //    clienteDB.TipoEmailID = cliente.TipoEmailID;
+        public void Editar(int clienteId, bool permitido, int tipoEmailID, int enviarParaId, int formaEnvioRmId)
+        {
+            PermissaoCliente novoCliente = new PermissaoCliente();
+            List<PermissaoTipo> listagemTipos = ListarPermissaoTipo();
+            List<PermissaoEnviarPara> listagemEnviarPara = ListarPermissaoEnviarPara();
+            List<PermissaoFormaEnvio> listagemForma = ListarFormaPermissao();
 
-        //    _context.permissaoClientes.Update(clienteDB);
-        //    _context.SaveChanges();
+            foreach (var x in listagemTipos)
+            {
+                if (x.TipoEmailID == tipoEmailID)
+                {
+                    novoCliente.TipoEmailID = x;
+                }
 
-        //    return clienteDB;
-        //}
+            }
+
+            foreach (var y in listagemEnviarPara)
+            {
+                if (y.EnviarParaID == enviarParaId)
+                {
+                    novoCliente.EnviarParaID = y;
+                }
+
+            }
+
+            foreach (var z in listagemForma)
+            {
+                if (z.FormaEnvioRmID == formaEnvioRmId)
+                {
+                    novoCliente.FormaEnvioRmID = z;
+                }
+
+            }
+
+            novoCliente.Permitido = permitido;
+
+            //
+            PermissaoCliente clienteEditado = FiltrarPorId(clienteId);
+            clienteEditado = novoCliente;
+
+            _context.permissaoClientes.Update(clienteEditado);
+            _context.SaveChanges();
+        }
 
         public PermissaoCliente FiltrarPorId(int id)
         {
@@ -100,6 +125,13 @@ namespace BlazorApp3.Repositorio
         public List<PermissaoCliente> ListarClientes()
         {
             return _context.permissaoClientes.ToList();
+        }
+
+        public void RemoverCliente(int id)
+        {
+            PermissaoCliente clienteRemovido = FiltrarPorId(id);
+            _context.permissaoClientes.Remove(clienteRemovido);
+            _context.SaveChanges();
         }
     }
 }

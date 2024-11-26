@@ -3,11 +3,12 @@
 @using BlazorApp3.Repositorio
 @using BlazorApp3.Data
 @inject IPermissaoRepositorio ipermissaorepositorio
+@inject NavigationManager navigationManager
+
 
 @code{
     List<PermissaoCliente> todosClientes;
-    PermissaoCliente pcliente;
-
+    PermissaoCliente pcliente; 
 }
 
 @{
@@ -60,11 +61,25 @@
         return descricao;
     }
 
+    void Remover(int id)
+    {
+        ipermissaorepositorio.RemoverCliente(id);
+    }
+
+    void Editar(int id)
+    {
+        // editar
+        navigationManager.NavigateTo("formulario");
+    }
 }
 
 <h3> Tabela de Clientes </h3>
 <hr />
-<h5> [+] Adicionar Cliente </h5>
+
+<NavLink href="adicionar">
+    <h5> [+] Adicionar Cliente </h5>
+</NavLink>
+
 <table class="table">
     <thead>
         <tr>       
@@ -85,8 +100,9 @@
                         <td>@descricaoTipo(cliente.TipoEmailID.TipoEmailID)</td>
                         <td>@descricaoEnviarPara(cliente.EnviarParaID.EnviarParaID)</td>
                         <td>@descricaoForma(cliente.FormaEnvioRmID.FormaEnvioRmID)</td>
-                        <td>Editar</td>
-                        <td>Remover</td>                       
+                        <button type="button" class="btn btn-outline-primary" @onclick="() => Editar(cliente.ClientID)">Editar</button>
+                        <button class="btn btn-outline-danger" @onclick="() => Remover(cliente.ClientID)">Remover</button>
+                                             
                     </tr>
                    
                 }
