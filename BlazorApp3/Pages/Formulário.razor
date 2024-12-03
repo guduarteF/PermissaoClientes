@@ -1,8 +1,9 @@
-﻿@page "/formulario"
+﻿@page "/formulario/{id:int}"
 @using BlazorApp3.Models
 @using BlazorApp3.Repositorio
 @using BlazorApp3.Data
 @inject IPermissaoRepositorio ipermissaorepositorio
+@inject NavigationManager navigationManager
 
 <h1>Editar</h1>
 
@@ -11,36 +12,49 @@
     public int tipoEmailID, formaEnvioRM, enviarParaID;
 
     [Parameter]
-    public int? Id { get; set; }
-    PermissaoCliente pcliente = new PermissaoCliente();
+    public int Id { get; set; }
+
     PermissaoDbContext pdbcontext { get; set; }
     List<PermissaoCliente> todosClientes = new List<PermissaoCliente>();
+    PermissaoCliente cliente = new PermissaoCliente();
 
     private int formaEnvio, tipoEnvio, enviarPara;
+    private bool permitido;
 
     async Task Save()
     {
-        //ipermissaorepositorio.Editar()
+        PermissaoCliente clienteEditado = ipermissaorepositorio.FiltrarPorId(Id);
+        ipermissaorepositorio.Editar(Id, permitido, tipoEnvio,
+            enviarPara, formaEnvio);
+        navigationManager.NavigateTo("/");
 
     }
 
+    protected override void OnInitialized()
+    {
+        List<PermissaoTipo> listagemTipos = ipermissaorepositorio.ListarPermissaoTipo();
+        List<PermissaoEnviarPara> listagemEnviarPara = ipermissaorepositorio.ListarPermissaoEnviarPara();
+        List<PermissaoFormaEnvio> listagem = ipermissaorepositorio.ListarFormaPermissao();
+        cliente = ipermissaorepositorio.FiltrarPorId(Id);
+
+
+        permitido = cliente.Permitido;
+        formaEnvio = cliente.FormaEnvioRmID.FormaEnvioRmID;
+        tipoEnvio = cliente.TipoEmailID.TipoEmailID;
+        enviarPara = cliente.EnviarParaID.EnviarParaID;
+    }
    
 }
 
 @{
-    List<PermissaoTipo> listagemTipos = ipermissaorepositorio.ListarPermissaoTipo();
-    List<PermissaoEnviarPara> listagemEnviarPara = ipermissaorepositorio.ListarPermissaoEnviarPara();
-    List<PermissaoFormaEnvio> listagem = ipermissaorepositorio.ListarFormaPermissao();
-    todosClientes = ipermissaorepositorio.ListarClientes();
-    pcliente = todosClientes[0];
-
-    formaEnvio = pcliente.FormaEnvioRmID.FormaEnvioRmID;
-    tipoEnvio = pcliente.TipoEmailID.TipoEmailID;
-    enviarPara = pcliente.EnviarParaID.EnviarParaID;
+   
+    
+    
 }
 
-<h4> Consultando Usuário de Id = @pcliente.ClientID </h4>
+<h4> Consultando Usuário de Id = @cliente.ClientID </h4>
 <hr />
+<p> ID : @Id </p>
 <div class="row">
     <div class="col-md-4">
         <form asp-controller="Permissao" asp-action="UpdateClient" method="post">
@@ -49,20 +63,20 @@
             <h5>Permitido</h5>
             <div class=" text-dark">
                 @{
-                    if(pcliente.Permitido)
+                    if (cliente.Permitido)
                     {
-                        <input type="checkbox" checked>
+                        <input type="checkbox" @bind="permitido">
                     }
                     else
                     {
-                        <input type="checkbox">
+                        <input type="checkbox" @bind="permitido">
                     }
                 }
                 
             </div>
             <br />
             
-            <EditForm Model="pcliente" OnSubmit="Save" FormName="editClient">
+            <EditForm Model="cliente" OnSubmit="Save" FormName="editClient">
                 <h5>Tipo Email </h5>
                 <div class="form-group text-dark">                 
                     <h1></h1>

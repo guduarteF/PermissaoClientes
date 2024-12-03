@@ -111,7 +111,10 @@ namespace BlazorApp3.Repositorio
 
             //
             PermissaoCliente clienteEditado = FiltrarPorId(clienteId);
-            clienteEditado = novoCliente;
+            clienteEditado.EnviarParaID = novoCliente.EnviarParaID;
+            clienteEditado.FormaEnvioRmID = novoCliente.FormaEnvioRmID;
+            clienteEditado.TipoEmailID = novoCliente.TipoEmailID;
+            clienteEditado.Permitido = novoCliente.Permitido;
 
             _context.permissaoClientes.Update(clienteEditado);
             _context.SaveChanges();

@@ -69,7 +69,8 @@
     void Editar(int id)
     {
         // editar
-        navigationManager.NavigateTo("formulario");
+        // como transferir esse clienteID para o end point formulario
+        navigationManager.NavigateTo($"/formulario/{id}");
     }
 }
 
